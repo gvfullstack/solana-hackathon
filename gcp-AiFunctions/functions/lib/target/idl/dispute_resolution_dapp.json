@@ -1,0 +1,190 @@
+{
+    "version": "0.1.0",
+    "name": "dispute_resolution_dapp",
+    "instructions": [
+        {
+            "name": "createDisputeAccount",
+            "accounts": [
+                {
+                    "name": "disputeAccount",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "initiator",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "rent",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "initializeDispute",
+            "accounts": [
+                {
+                    "name": "disputeAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "initiator",
+                    "isMut": true,
+                    "isSigner": true
+                }
+            ],
+            "args": [
+                {
+                    "name": "disputeId",
+                    "type": "publicKey"
+                },
+                {
+                    "name": "respondentId",
+                    "type": "publicKey"
+                },
+                {
+                    "name": "disputedContractId",
+                    "type": "publicKey"
+                },
+                {
+                    "name": "metadata",
+                    "type": {
+                        "option": "string"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "recordDecision",
+            "accounts": [
+                {
+                    "name": "disputeAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "aiBackend",
+                    "isMut": false,
+                    "isSigner": true
+                }
+            ],
+            "args": [
+                {
+                    "name": "decision",
+                    "type": "u8"
+                }
+            ]
+        }
+    ],
+    "accounts": [
+        {
+            "name": "Dispute",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "disputeId",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "initiator",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "respondent",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "disputedContractId",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "status",
+                        "type": {
+                            "defined": "DisputeStatus"
+                        }
+                    },
+                    {
+                        "name": "decision",
+                        "type": {
+                            "option": {
+                                "defined": "Decision"
+                            }
+                        }
+                    },
+                    {
+                        "name": "metadata",
+                        "type": {
+                            "option": "string"
+                        }
+                    },
+                    {
+                        "name": "timestamp",
+                        "type": "i64"
+                    }
+                ]
+            }
+        }
+    ],
+    "types": [
+        {
+            "name": "DisputeStatus",
+            "type": {
+                "kind": "enum",
+                "variants": [
+                    {
+                        "name": "Open"
+                    },
+                    {
+                        "name": "Closed"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Decision",
+            "type": {
+                "kind": "enum",
+                "variants": [
+                    {
+                        "name": "Pay"
+                    },
+                    {
+                        "name": "DontPay"
+                    }
+                ]
+            }
+        }
+    ],
+    "errors": [
+        {
+            "code": 6000,
+            "name": "DisputeAlreadyResolved",
+            "msg": "Dispute has already been resolved"
+        },
+        {
+            "code": 6001,
+            "name": "UnauthorizedAction",
+            "msg": "Unauthorized action"
+        },
+        {
+            "code": 6002,
+            "name": "InvalidDisputeAccount",
+            "msg": "Invalid dispute account"
+        },
+        {
+            "code": 6003,
+            "name": "InvalidInput",
+            "msg": "Invalid input data"
+        }
+    ]
+}
